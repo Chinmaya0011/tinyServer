@@ -11,6 +11,7 @@ const app = express();
 // Use the environment variables for configuration
 const port = process.env.PORT || 3000;
 const uri = process.env.MONGODB_URI;
+const baseUrl = process.env.BASE_URL || 'http://localhost:3000'; // Default to localhost if BASE_URL is not set
 
 app.use(express.json());
 app.use(cors());
@@ -40,7 +41,7 @@ app.post('/shorten', async (req, res) => {
   const newUrl = new Url({ originalUrl, shortUrl, userName, linkType });
   await newUrl.save();
 
-  res.json({ shortUrl: `http://localhost:${port}/${shortUrl}` });
+  res.json({ shortUrl: `${baseUrl}/${shortUrl}` }); // Updated URL
 });
 
 // Redirect from short URL to original URL
@@ -56,5 +57,5 @@ app.get('/:shortUrl', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at ${baseUrl}`);
 });
